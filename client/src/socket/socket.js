@@ -21,14 +21,18 @@ export const useSocket = () => {
   const [messages, setMessages] = useState([]);
   const [users, setUsers] = useState([]);
   const [typingUsers, setTypingUsers] = useState([]);
+  const [readMessages, setReadMessages] = useState({});
+  const [deliveryStatus, setDeliveryStatus] = useState({});
+  const [isReconnecting, setIsReconnecting] = useState(false);
+
+
 
   // Connect to socket server
-  const connect = (username) => {
-    socket.connect();
-    if (username) {
-      socket.emit('user_join', username);
-    }
-  };
+  const connect = ({ username, room }) => {
+  socket.connect();
+  socket.emit('user_join', { username, room });
+};
+
 
   // Disconnect from socket server
   const disconnect = () => {
@@ -36,14 +40,31 @@ export const useSocket = () => {
   };
 
   // Send a message
-  const sendMessage = (message) => {
-    socket.emit('send_message', { message });
-  };
+  // ✅ UPDATED sendMessage to support delivery ACK
+const sendMessage = (data) => {
+  return new Promise((resolve) => {
+    socket.emit("send_message", data, (ack) => {
+      setDeliveryStatus((prev) => ({ ...prev, [ack.id]: "sent" }));
+      resolve(ack);
+    });
+  });
+};
+
 
   // Send a private message
   const sendPrivateMessage = (to, message) => {
     socket.emit('private_message', { to, message });
   };
+
+ // ✅ send reaction
+const sendReaction = (messageId, reaction) => {
+  socket.emit("message:reaction", { messageId, reaction });
+};
+
+  // Send read receipt
+const sendReadReceipt = (messageId) => {
+  socket.emit("message:read", { messageId });
+};
 
   // Set typing status
   const setTyping = (isTyping) => {
@@ -108,6 +129,16 @@ export const useSocket = () => {
       setTypingUsers(users);
     };
 
+    // ✅ delivered confirmation from server
+socket.on("message_delivered", ({ messageId }) => {
+  setDeliveryStatus((prev) => ({ ...prev, [messageId]: "delivered" }));
+});
+
+// ✅ reconnect events
+socket.on("reconnect_attempt", () => setIsReconnecting(true));
+socket.on("reconnect", () => setIsReconnecting(false));
+
+
     // Register event listeners
     socket.on('connect', onConnect);
     socket.on('disconnect', onDisconnect);
@@ -117,6 +148,18 @@ export const useSocket = () => {
     socket.on('user_joined', onUserJoined);
     socket.on('user_left', onUserLeft);
     socket.on('typing_users', onTypingUsers);
+
+
+   
+    const onMessageReadUpdate = ({ messageId, readerId }) => {
+  setReadMessages((prev) => ({
+    ...prev,
+    [messageId]: [...(prev[messageId] || []), readerId],
+  }));
+};
+
+socket.on("message:read:update", onMessageReadUpdate);
+ 
 
     // Clean up event listeners
     return () => {
@@ -128,8 +171,29 @@ export const useSocket = () => {
       socket.off('user_joined', onUserJoined);
       socket.off('user_left', onUserLeft);
       socket.off('typing_users', onTypingUsers);
+      socket.off("message:read:update", onMessageReadUpdate);
+
     };
   }, []);
+
+  // ✅ Message reaction update
+    socket.on("message:reaction:update", ({ messageId, reaction, userId }) => {
+      setMessages((prev) =>
+        prev.map((msg) =>
+          msg.id === messageId
+            ? {
+                ...msg,
+                reactions: {
+                  ...(msg.reactions || {}),
+                  [userId]: reaction
+                }
+              }
+            : msg
+        )
+      );
+    });
+
+  
 
   return {
     socket,
@@ -143,7 +207,12 @@ export const useSocket = () => {
     sendMessage,
     sendPrivateMessage,
     setTyping,
-  };
+    sendReadReceipt,
+    readMessages,
+    sendReaction,
+    deliveryStatus,
+    isReconnecting,
+   };
 };
 
 export default socket; 
