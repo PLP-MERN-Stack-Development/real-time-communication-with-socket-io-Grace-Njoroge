@@ -1,77 +1,145 @@
-# Real-Time Chat Application with Socket.io
+# Real-Time Chat Application
 
-This assignment focuses on building a real-time chat application using Socket.io, implementing bidirectional communication between clients and server.
+A real-time chat application built with Socket.IO, React, and Node.js that enables users to communicate in real-time with features like private messaging, typing indicators, and message reactions.
 
-## Assignment Overview
+## 🚀 Features
 
-You will build a chat application with the following features:
-1. Real-time messaging using Socket.io
-2. User authentication and presence
-3. Multiple chat rooms or private messaging
-4. Real-time notifications
-5. Advanced features like typing indicators and read receipts
+- Real-time messaging with Socket.IO
+- Room-based chat system
+- Private messaging between users
+- Typing indicators
+- Message reactions
+- Read receipts
+- User join/leave notifications
+- Image sharing support
+- Message history with pagination
+- Search functionality
+- User presence tracking
 
-## Project Structure
+## 🛠️ Tech Stack
 
-```
-socketio-chat/
-├── client/                 # React front-end
-│   ├── public/             # Static files
-│   ├── src/                # React source code
-│   │   ├── components/     # UI components
-│   │   ├── context/        # React context providers
-│   │   ├── hooks/          # Custom React hooks
-│   │   ├── pages/          # Page components
-│   │   ├── socket/         # Socket.io client setup
-│   │   └── App.jsx         # Main application component
-│   └── package.json        # Client dependencies
-├── server/                 # Node.js back-end
-│   ├── config/             # Configuration files
-│   ├── controllers/        # Socket event handlers
-│   ├── models/             # Data models
-│   ├── socket/             # Socket.io server setup
-│   ├── utils/              # Utility functions
-│   ├── server.js           # Main server file
-│   └── package.json        # Server dependencies
-└── README.md               # Project documentation
-```
+- **Frontend**: React + Vite
+- **Backend**: Node.js + Express
+- **Real-time Communication**: Socket.IO
+- **Styling**: CSS/SCSS
+- **Environment Variables**: dotenv
 
-## Getting Started
+## 📝 Prerequisites
 
-1. Accept the GitHub Classroom assignment invitation
-2. Clone your personal repository that was created by GitHub Classroom
-3. Follow the setup instructions in the `Week5-Assignment.md` file
-4. Complete the tasks outlined in the assignment
-
-## Files Included
-
-- `Week5-Assignment.md`: Detailed assignment instructions
-- Starter code for both client and server:
-  - Basic project structure
-  - Socket.io configuration templates
-  - Sample components for the chat interface
-
-## Requirements
-
-- Node.js (v18 or higher)
+- Node.js (v14 or higher)
 - npm or yarn
-- Modern web browser
-- Basic understanding of React and Express
+- MongoDB (if using database features)
 
-## Submission
+## ⚙️ Installation & Setup
 
-Your work will be automatically submitted when you push to your GitHub Classroom repository. Make sure to:
+1. **Clone the repository**
+```bash
+git clone https://github.com/PLP-MERN-Stack-Development/real-time-communication-with-socket-io-Grace-Njoroge.git
+cd real-time-communication-with-socket-io-Grace-Njoroge
+```
 
-1. Complete both the client and server portions of the application
-2. Implement the core chat functionality
-3. Add at least 3 advanced features
-4. Document your setup process and features in the README.md
-5. Include screenshots or GIFs of your working application
-6. Optional: Deploy your application and add the URLs to your README.md
+2. **Install dependencies**
+```bash
+# Install server dependencies
+cd server
+npm install
 
-## Resources
+# Install client dependencies
+cd ../client
+npm install
+```
 
-- [Socket.io Documentation](https://socket.io/docs/v4/)
-- [React Documentation](https://react.dev/)
-- [Express.js Documentation](https://expressjs.com/)
-- [Building a Chat Application with Socket.io](https://socket.io/get-started/chat) 
+3. **Environment Variables**
+
+Create `.env` files in both client and server directories:
+
+Server `.env`:
+```plaintext
+PORT=5000
+CLIENT_URL=http://localhost:5173
+```
+
+Client `.env`:
+```plaintext
+VITE_SOCKET_URL=http://localhost:5000
+```
+
+4. **Start the application**
+```bash
+# Start server (from server directory)
+npm run dev
+
+# Start client (from client directory)
+npm run dev
+```
+
+## 🎯 Features Implemented
+
+### 1. Real-time Communication
+- Instant message delivery
+- Typing indicators
+- Online/offline status
+
+### 2. Chat Rooms
+- Multiple chat room support
+- Room-specific message history
+- User join/leave notifications
+
+### 3. Message Features
+- Text messages
+- Image sharing
+- Message reactions
+- Read receipts
+- Message search
+
+### 4. User Experience
+- Clean, responsive UI
+- Real-time user list
+- Typing indicators
+- Join/leave notifications
+
+## 🔧 Usage
+
+1. Open the application in your browser
+2. Enter your username and select a room
+3. Start chatting!
+4. Use "@username" to send private messages
+5. Click on messages to add reactions
+6. Use the search bar to find specific messages
+
+## 📱 Screenshots
+
+### Login Screen
+![Login Screen](screenshots/login.png)!
+*Users can enter their name and select a chat room*
+
+### Chat Interface
+![Chat Interface](screenshots/chat.png)
+*Main chat interface showing online users, messages, and reactions*
+
+### Typing Indicator
+![Typing Indicator](screenshots/typing.png)!
+*Real-time typing indicator when users are composing messages*
+
+
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 👤 Author
+
+Grace Njoroge
+
+## 🙏 Acknowledgments
+
+- Socket.IO team for the amazing real-time engine
+- PLP MERN Stack Development Program
